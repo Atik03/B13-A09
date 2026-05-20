@@ -45,7 +45,10 @@ function HeroBanner() {
                   the comfort of your home.
                 </p>
 
-                <Link href={"/allappointment"} className="btn btn-primary">
+                <Link
+                  href={"/allappointment"}
+                  className="btn bg-primary border-none text-white"
+                >
                   Book an Appointment
                 </Link>
               </div>
