@@ -65,10 +65,10 @@ const NavBar = () => {
         </div>
         <ul className="flex items-center  text-sm gap-5">
           <li className="btn bg-green-500 text-white">
-            <Link href={"/"}>SignUp</Link>
+            <Link href={"/signup"}>SignUp</Link>
           </li>
           <li className="btn bg-green-500 text-white">
-            <Link href={"/"}>SignIn</Link>
+            <Link href={"/signin"}>SignIn</Link>
           </li>
         </ul>
       </div>
