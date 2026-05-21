@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import {
   FaFacebookF,
@@ -36,20 +37,24 @@ const doctors = [
 function Footer() {
   return (
     <footer className="bg-[#111827] text-white pt-16 pb-6 ">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-gray-700">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-gray-700">
           <div>
-            <h2 className="text-3xl font-bold mb-5">
-              <span className="text-green-500">Online Doctor</span>
-            </h2>
+            <div className="flex gap-5 flex-col items-center mb-5">
+              <Image
+                src={"/doctorlogo.jpg"}
+                alt="logo"
+                loading="eager"
+                width={50}
+                height={50}
+                className="object-cover h-auto w-auto rounded-full"
+              />
+              <p className="text-3xl font-bold mb-5">
+                <span className="text-green-500">Online Doctor</span>
+              </p>
+            </div>
 
-            <p className="text-gray-300 leading-7 text-sm sm:text-base">
-              We are committed to providing world-class healthcare services with
-              trusted specialists, advanced technology, and compassionate care
-              for every patient.
-            </p>
-
-            <div className="flex items-center gap-4 mt-6">
+            <div className="flex items-center justify-center gap-4 mt-6">
               <Link
                 href="#"
                 className="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-700 transition-all duration-300 flex items-center justify-center"
@@ -141,10 +146,10 @@ function Footer() {
             </ul>
           </div>
 
-          <div>
+          <div className="">
             <h3 className="text-2xl font-semibold mb-5">Get In Touch</h3>
 
-            <div className="space-y-5 text-gray-300">
+            <div className="space-y-5 flex flex-col items-center justify-center text-gray-300">
               <div className="flex items-start gap-3">
                 <FaMapMarkerAlt className="text-blue-500 mt-1" />
 

@@ -1,9 +1,13 @@
+"use client";
 import React from "react";
 import NavLink from "./NavLink";
 import Link from "next/link";
 import Image from "next/image";
+import { authClient } from "@/lib/auth-client";
 
 const NavBar = () => {
+  const { data: session, isPending } = authClient.useSession();
+  const user = session?.user;
   return (
     <div className="navbar bg-base-100 shadow-sm">
       <div className="navbar-start">
@@ -58,19 +62,47 @@ const NavBar = () => {
         </ul>
       </div>
       <div className="navbar-end gap-4">
-        <div className="avatar">
-          <div className="ring-primary ring-offset-base-100 w-10 rounded-full ring-2 ring-offset-2">
-            <img src="https://img.daisyui.com/images/profile/demo/spiderperson@192.webp" />
-          </div>
+        {user && <h2 className="hidden md:block">Hi, {user.name}</h2>}
+
+        <div>
+          {isPending ? (
+            <span className="loading loading-spinner loading-lg"></span>
+          ) : user ? (
+            <div className="flex gap-5">
+              <div className="avatar">
+                <div className="ring-primary ring-offset-base-100 w-10 rounded-full ring-2 ring-offset-2">
+                  <Image
+                    src={
+                      user.image ||
+                      "https://t4.ftcdn.net/jpg/08/08/37/31/360_F_808373133_lrCrFLLTXF0A2WQK7QKMCNAzKCjX7kvb.jpg"
+                    }
+                    alt="Profile"
+                    width={40}
+                    height={40}
+                  />
+                </div>
+              </div>
+
+              <div className="text-sm gap-5">
+                <button
+                  className="btn bg-red-500 text-white"
+                  onClick={async () => await authClient.signOut()}
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          ) : (
+            <ul className="flex items-center text-sm gap-5">
+              <li className="btn bg-green-500 text-white">
+                <Link href={"/signup"}>SignUp</Link>
+              </li>
+              <li className="btn bg-green-500 text-white">
+                <Link href={"/signin"}>LogIn</Link>
+              </li>
+            </ul>
+          )}
         </div>
-        <ul className="flex items-center  text-sm gap-5">
-          <li className="btn bg-green-500 text-white">
-            <Link href={"/signup"}>SignUp</Link>
-          </li>
-          <li className="btn bg-green-500 text-white">
-            <Link href={"/signin"}>SignIn</Link>
-          </li>
-        </ul>
       </div>
     </div>
   );
