@@ -5,13 +5,49 @@ import { FaStar } from "react-icons/fa";
 import { IoMdClock } from "react-icons/io";
 import { FaRegHospital } from "react-icons/fa";
 import { TbCurrencyTaka } from "react-icons/tb";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "react-toastify";
 
 function DoctorDetails({ DoctorDetailsData }) {
-  const onSubmit = (e) => {
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
+
+  const onSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new FormData(e.target);
-    console.log(Object.fromEntries(formData));
+    const patientData = Object.fromEntries(formData);
+
+    const bookingData = {
+      userId: user?.id,
+      userImage: user?.image,
+      patientName: patientData.patientName,
+      date: patientData.date,
+      time: patientData.time,
+      phone: patientData.phone,
+      gender: patientData.gender,
+      reason: patientData.reason,
+      DoctorId: DoctorDetailsData._id,
+      doctorName: DoctorDetailsData.name,
+    };
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/booking`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(bookingData),
+    });
+
+    const data = await res.json();
+
+    if (data) {
+      toast.success("Appointment booked successfully!");
+    } else {
+      toast.error("Failed to book appointment. Please try again.");
+    }
+
+    console.log(bookingData);
     document.getElementById("appointment_modal")?.close();
   };
 
@@ -138,35 +174,36 @@ function DoctorDetails({ DoctorDetailsData }) {
                           className="input input-bordered w-full"
                         />
                       </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="font-semibold mb-2 block">
+                            Gender
+                          </label>
+                          <select
+                            name="gender"
+                            defaultValue=""
+                            className="select select-bordered w-full"
+                          >
+                            <option value="" disabled>
+                              Select Gender
+                            </option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                          </select>
+                        </div>
 
-                      <div>
-                        <label className="font-semibold mb-2 block">
-                          Gender
-                        </label>
-                        <select
-                          name="gender"
-                          defaultValue=""
-                          className="select select-bordered w-full"
-                        >
-                          <option value="" disabled>
-                            Select Gender
-                          </option>
-                          <option value="Male">Male</option>
-                          <option value="Female">Female</option>
-                          <option value="Other">Other</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="font-semibold mb-2 block">
-                          Phone Number
-                        </label>
-                        <input
-                          name="phone"
-                          type="tel"
-                          placeholder="Enter phone number"
-                          className="input input-bordered w-full"
-                        />
+                        <div>
+                          <label className="font-semibold mb-2 block">
+                            Phone Number
+                          </label>
+                          <input
+                            name="phone"
+                            type="tel"
+                            placeholder="Enter phone number"
+                            className="input input-bordered w-full"
+                          />
+                        </div>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -206,7 +243,7 @@ function DoctorDetails({ DoctorDetailsData }) {
 
                       <button
                         type="submit"
-                        className="btn btn-primary w-full rounded-xl text-lg"
+                        className="btn bg-gray-800 w-full rounded-md text-lg text-white"
                       >
                         Book Appointment
                       </button>

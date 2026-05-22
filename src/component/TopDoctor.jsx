@@ -2,7 +2,7 @@ import React from "react";
 import DoctorCard from "./DoctorCard";
 
 async function TopDoctor() {
-  const res = await fetch(`${process.env.PUBLIC_SERVER_URL}/topDoctor`);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/topDoctor`);
   const allAppointments = await res.json();
   return (
     <div className="py-10 px-4 md:px-none mt-15">

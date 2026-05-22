@@ -4,7 +4,7 @@ import React from "react";
 async function DoctorDetailsPage({ params }) {
   const { id } = await params;
   const res = await fetch(
-    `${process.env.PUBLIC_SERVER_URL}/allDoctorList/${id}`,
+    `${process.env.NEXT_PUBLIC_SERVER_URL}/allDoctorList/${id}`,
   );
   const DoctorDetailsData = await res.json();
 

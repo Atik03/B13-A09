@@ -3,9 +3,10 @@ import Image from "next/image";
 import React from "react";
 
 const AllAppointment = async () => {
-  const res = await fetch(`${process.env.PUBLIC_SERVER_URL}/allDoctorList`);
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_SERVER_URL}/allDoctorList`,
+  );
   const allAppointments = await res.json();
-  console.log(allAppointments);
 
   return (
     <div className="py-10 px-4 md:px-none">
