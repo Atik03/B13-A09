@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { FaUser, FaEnvelope, FaEdit } from "react-icons/fa";
 import { authClient } from "@/lib/auth-client";
+import { toast } from "react-toastify";
 
 function Profile() {
   const userData = authClient.useSession();
@@ -17,6 +18,8 @@ function Profile() {
       name,
       image,
     });
+
+    toast.success("Update Your Profile");
     document.getElementById("my_modal_1").close();
   };
 
@@ -66,7 +69,12 @@ function Profile() {
                       <form className="space-y-4 " onSubmit={onSubmit}>
                         <fieldset className="fieldset">
                           <legend className="fieldset-legend">Name</legend>
-                          <input type="text" className="input" name="name" />
+                          <input
+                            type="text"
+                            className="input"
+                            name="name"
+                            defaultValue={user.name}
+                          />
                         </fieldset>
 
                         <fieldset className="fieldset">
@@ -76,6 +84,7 @@ function Profile() {
                             className="input"
                             placeholder="Type here photo url"
                             name="image"
+                            defaultValue={user.image}
                           />
                         </fieldset>
 

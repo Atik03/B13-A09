@@ -7,6 +7,7 @@ import { FaRegHospital } from "react-icons/fa";
 import { TbCurrencyTaka } from "react-icons/tb";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "react-toastify";
+import Image from "next/image";
 
 function DoctorDetails({ DoctorDetailsData }) {
   const { data: session } = authClient.useSession();
@@ -21,7 +22,7 @@ function DoctorDetails({ DoctorDetailsData }) {
     const bookingData = {
       userId: user?.id,
       userImage: user?.image,
-      patientName: patientData.patientName,
+      patientName: patientData.patientName || user?.name,
       date: patientData.date,
       time: patientData.time,
       phone: patientData.phone,
@@ -31,10 +32,13 @@ function DoctorDetails({ DoctorDetailsData }) {
       doctorName: DoctorDetailsData.name,
     };
 
+    const { data: tokenData } = await authClient.token();
+
     const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/booking`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
+        authorization: `Bearer ${tokenData?.token}`,
       },
       body: JSON.stringify(bookingData),
     });
@@ -47,7 +51,6 @@ function DoctorDetails({ DoctorDetailsData }) {
       toast.error("Failed to book appointment. Please try again.");
     }
 
-    console.log(bookingData);
     document.getElementById("appointment_modal")?.close();
   };
 
@@ -56,15 +59,18 @@ function DoctorDetails({ DoctorDetailsData }) {
       <div className="flex flex-col lg:flex-row">
         <div className="lg:w-1/3 bg-primary/5 p-8 flex flex-col items-center justify-center">
           <div className="relative">
-            <img
+            <Image
               src={DoctorDetailsData.image}
               alt={DoctorDetailsData.name}
+              width={220}
+              height={220}
               className="w-56 h-56 rounded-3xl object-cover shadow-lg border-4 border-white"
             />
 
             <div className="absolute -bottom-3 left-1/2 -translate-x-1/2">
               <div className="badge badge-info badge-lg text-white px-5 py-4 font-semibold">
-                <FaStar className="" /> {DoctorDetailsData.rating}
+                <FaStar />
+                {DoctorDetailsData.rating}
               </div>
             </div>
           </div>
@@ -123,7 +129,7 @@ function DoctorDetails({ DoctorDetailsData }) {
           </div>
 
           <div className="mt-10 border-t border-base-300 pt-6">
-            <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div>
                 <p className="text-gray-500 text-sm">Consultation Fee</p>
                 <div className="flex">
@@ -134,7 +140,7 @@ function DoctorDetails({ DoctorDetailsData }) {
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 w-full xl:w-auto">
+              <div className="flex flex-col sm:flex-row gap-4  w-full  md:w-auto">
                 <button
                   className="btn bg-gray-800 rounded-md text-white"
                   onClick={() =>

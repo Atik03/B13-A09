@@ -2,8 +2,17 @@ import DashboardClient from "./DashboardClient";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
+export const metadata = {
+  title: "Dashboard",
+  description: "Dashboard page for Online Doctor Appointment",
+};
+
 async function Dashboard() {
   const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  const { token } = await auth.api.getToken({
     headers: await headers(),
   });
 
@@ -11,7 +20,11 @@ async function Dashboard() {
 
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_SERVER_URL}/booking/${user?.id}`,
-    { cache: "no-store" },
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    },
   );
 
   const bookings = await res.json();

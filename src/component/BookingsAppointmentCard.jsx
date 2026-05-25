@@ -1,23 +1,32 @@
+"use client";
+
 import React from "react";
 import { FaCalendarAlt, FaClock, FaUserMd } from "react-icons/fa";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { toast } from "react-toastify";
+import { authClient } from "@/lib/auth-client";
+import Image from "next/image";
 
 function BookingsAppointmentCard({ UserBookingData }) {
   const { _id } = UserBookingData;
 
-  // DELETE
   const handleDelete = async () => {
+    const { data: tokenData } = await authClient.token();
+
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_SERVER_URL}/booking/${_id}`,
       {
         method: "DELETE",
+        headers: {
+          authorization: `Bearer ${tokenData?.token}`,
+        },
       },
     );
 
     const data = await res.json();
 
     if (data.deletedCount > 0) {
+      document.getElementById(`delete_modal_${_id}`)?.close();
       toast.success("Deleted Successfully!");
       window.location.reload();
     } else {
@@ -25,7 +34,6 @@ function BookingsAppointmentCard({ UserBookingData }) {
     }
   };
 
-  // UPDATE
   const onSubmit = async (e) => {
     e.preventDefault();
 
@@ -33,7 +41,7 @@ function BookingsAppointmentCard({ UserBookingData }) {
     const patientData = Object.fromEntries(formData);
 
     const updatedData = {
-      patientName: patientData.patientName,
+      patientName: patientData.patientName || UserBookingData.patientName,
       date: patientData.date,
       time: patientData.time,
       phone: patientData.phone,
@@ -41,12 +49,15 @@ function BookingsAppointmentCard({ UserBookingData }) {
       reason: patientData.reason,
     };
 
+    const { data: tokenData } = await authClient.token();
+
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_SERVER_URL}/booking/${_id}`,
       {
         method: "PATCH",
         headers: {
           "content-type": "application/json",
+          authorization: `Bearer ${tokenData?.token}`,
         },
         body: JSON.stringify(updatedData),
       },
@@ -68,9 +79,13 @@ function BookingsAppointmentCard({ UserBookingData }) {
     <div className="card bg-base-100 shadow-xl border border-base-200 rounded-3xl overflow-hidden">
       <div className="bg-gradient-to-r from-primary to-secondary p-6 text-white">
         <div className="flex items-center gap-4">
-          <img
-            src={UserBookingData.userImage}
+          <Image
+            src={
+              UserBookingData.userImage || "https://i.ibb.co/4pDNDk1/avatar.png"
+            }
             alt="User"
+            width={80}
+            height={80}
             className="w-20 h-20 rounded-2xl object-cover border-4 border-white"
           />
 
@@ -151,12 +166,16 @@ function BookingsAppointmentCard({ UserBookingData }) {
               </h3>
 
               <form className="space-y-5" onSubmit={onSubmit}>
+                <label className="font-semibold mb-2 block">Doctor Name</label>
+
                 <input
                   type="text"
                   value={UserBookingData.doctorName}
                   readOnly
                   className="input input-bordered w-full"
                 />
+
+                <label className="font-semibold mb-2 block">Patient Name</label>
 
                 <input
                   name="patientName"
@@ -165,40 +184,61 @@ function BookingsAppointmentCard({ UserBookingData }) {
                 />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <select
-                    name="gender"
-                    defaultValue={UserBookingData.gender}
-                    className="select select-bordered w-full"
-                  >
-                    <option disabled>Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                  </select>
+                  <div className="">
+                    <label className="font-semibold mb-2 block">Gender</label>
+                    <select
+                      name="gender"
+                      defaultValue={UserBookingData.gender}
+                      className="select select-bordered w-full"
+                    >
+                      <option disabled>Select Gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
 
-                  <input
-                    name="phone"
-                    defaultValue={UserBookingData.phone}
-                    className="input input-bordered w-full"
-                  />
+                  <div className="">
+                    <label className="font-semibold mb-2 block">
+                      Phone Number
+                    </label>
+                    <input
+                      name="phone"
+                      defaultValue={UserBookingData.phone}
+                      className="input input-bordered w-full"
+                    />
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <input
-                    name="date"
-                    type="date"
-                    defaultValue={UserBookingData.date}
-                    className="input input-bordered w-full"
-                  />
+                  <div>
+                    <label className="font-semibold mb-2 block">
+                      Appointment Date
+                    </label>
+                    <input
+                      name="date"
+                      type="date"
+                      defaultValue={UserBookingData.date}
+                      className="input input-bordered w-full"
+                    />
+                  </div>
 
-                  <input
-                    name="time"
-                    type="time"
-                    defaultValue={UserBookingData.time}
-                    className="input input-bordered w-full"
-                  />
+                  <div>
+                    <label className="font-semibold mb-2 block">
+                      Appointment Time
+                    </label>
+                    <input
+                      name="time"
+                      type="time"
+                      defaultValue={UserBookingData.time}
+                      className="input input-bordered w-full"
+                    />
+                  </div>
                 </div>
 
+                <label className="font-semibold mb-2 block">
+                  Reason for Appointment
+                </label>
                 <textarea
                   name="reason"
                   defaultValue={UserBookingData.reason}
@@ -216,12 +256,44 @@ function BookingsAppointmentCard({ UserBookingData }) {
           </dialog>
 
           <button
-            onClick={handleDelete}
+            onClick={() =>
+              document.getElementById(`delete_modal_${_id}`)?.showModal()
+            }
             className="btn btn-error flex-1 text-white rounded-xl"
           >
             <MdDelete className="text-xl" />
             Delete
           </button>
+
+          <dialog id={`delete_modal_${_id}`} className="modal">
+            <div className="modal-box rounded-3xl max-w-md">
+              <h3 className="font-bold text-2xl text-center mb-4">
+                Delete Appointment
+              </h3>
+
+              <p className="text-center text-gray-500 leading-7">
+                Are you sure you want to delete this appointment?
+              </p>
+
+              <div className="flex gap-4 mt-8">
+                <button
+                  onClick={() =>
+                    document.getElementById(`delete_modal_${_id}`)?.close()
+                  }
+                  className="btn flex-1 rounded-xl"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  onClick={handleDelete}
+                  className="btn btn-error flex-1 rounded-xl text-white"
+                >
+                  Confirm Delete
+                </button>
+              </div>
+            </div>
+          </dialog>
         </div>
       </div>
     </div>

@@ -45,16 +45,14 @@ function SpecializedDoctors() {
   return (
     <section className="py-16 px-4  bg-base-100">
       <div className="text-center mb-14">
-        <h2 className="text-xl md:text-3xl font-bold">
-          Consult Our Specialized Doctors
-        </h2>
+        <h2 className="text-2xl md:text-3xl font-bold">Consult Our Doctors</h2>
 
         <p className="text-gray-500 mt-4 text-lg">
           Our expert doctors are available 24/7 for your healthcare support
         </p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-5">
         {specialties.map((item) => (
           <div
             key={item.id}

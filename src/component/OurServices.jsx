@@ -3,6 +3,7 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import { FaArrowRightLong } from "react-icons/fa6";
+import Image from "next/image";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -55,7 +56,7 @@ function OurServices() {
     <section className="w-full py-14 md:py-20 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 ">
         <div className="text-center mb-10 md:mb-14">
-          <h2 className="text-3xl sm:text-2xl md:text-3xl font-bold text-black mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-black mb-4">
             Our Services
           </h2>
 
@@ -95,11 +96,12 @@ function OurServices() {
           {services.map((service) => (
             <SwiperSlide key={service.id} className="h-auto">
               <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-[520px]">
-                <div className="w-full h-[240px] overflow-hidden">
-                  <img
+                <div className="w-full h-[240px] overflow-hidden relative">
+                  <Image
                     src={service.image}
                     alt={service.title}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    fill
+                    className="object-cover hover:scale-105 transition-transform duration-500"
                   />
                 </div>
 

@@ -6,8 +6,10 @@ async function TopDoctor() {
   const allAppointments = await res.json();
   return (
     <div className="py-10 px-4 md:px-none mt-15">
-      <h1 className="text-4xl text-center font-bold pb-15 ">Our Top Doctors</h1>
-      <div className="grid lg:grid-cols-4 grid-cols-1 md:grid-cols-2 gap-4">
+      <h1 className="text-2xl md:text-3xl text-center font-bold pb-15 ">
+        Our Top Doctors
+      </h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3  gap-8">
         {allAppointments.map((appointment) => (
           <div key={appointment._id}>
             <DoctorCard doctor={appointment} />

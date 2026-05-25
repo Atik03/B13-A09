@@ -5,13 +5,14 @@ import BookingsAppointmentCard from "@/component/BookingsAppointmentCard";
 import Profile from "@/component/Profile";
 import { FaCalendarTimes } from "react-icons/fa";
 
-function DashboardClient({ bookings = [] }) {
+function DashboardClient({ bookings }) {
   const [activeTab, setActiveTab] = useState("appointments");
 
   return (
     <div className="py-10 max-w-6xl mx-auto px-4">
-      {/* Title */}
-      <h1 className="text-3xl font-bold text-center mb-10">Dashboard</h1>
+      <h1 className="text-2xl md:text-3xl font-bold text-center mb-10">
+        Dashboard
+      </h1>
 
       <div className="flex justify-center">
         <div className="flex gap-3 bg-base-200 p-2 rounded-xl shadow-sm">

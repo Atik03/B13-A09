@@ -1,15 +1,18 @@
 import React from "react";
 import { FaStar } from "react-icons/fa";
 import Link from "next/link";
+import Image from "next/image";
 
 function DoctorCard({ doctor }) {
   return (
-    <div className="card max-w-sm bg-base-100 shadow-2xl rounded-xl relative">
-      <figure>
-        <img
+    <div className="card bg-base-100 shadow-xl border border-gray-200 hover:shadow-2xl transition-all duration-300 relative">
+      <figure className="relative h-65 w-full">
+        <Image
           src={doctor.image}
           alt={doctor.name}
-          className="w-full h-72 object-cover"
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
       </figure>
 
